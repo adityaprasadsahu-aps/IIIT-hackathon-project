@@ -42,14 +42,12 @@
 
     <h1>Live Video with Captions and Translation</h1>
 
-    <!-- Video Element -->
+
     <video id="video" autoplay playsinline></video>
 
-    <!-- Captions and Translated Text -->
     <div id="captions">Captions will appear here...</div>
     <div id="translated">Translated text will appear here...</div>
 
-    <!-- Buttons -->
     <button id="startButton">Start Camera & Mic</button>
     <button id="stopButton" disabled>Stop Camera & Mic</button>
 
@@ -63,18 +61,17 @@
         let mediaStream;
         let recognition;
 
-        // Check if the browser supports the Web Speech API
         if (!('webkitSpeechRecognition' in window)) {
             alert("Your browser does not support the Web Speech API. Please use Chrome.");
         } else {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.continuous = true; // Enable continuous listening
-            recognition.interimResults = true; // Show interim results
-            recognition.lang = 'en-US'; // Set the language for speech recognition
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
         }
 
         async function translateText(text, targetLanguage = 'es') {
-    const apiKey = 'YOUR_GOOGLE_TRANSLATE_API_KEY'; // Replace with your API key
+    const apiKey = 'YOUR_GOOGLE_TRANSLATE_API_KEY';
     const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
 
     try {
@@ -101,17 +98,16 @@
     }
 }
 
-        // Start camera and microphone
         async function startCameraAndMic() {
             try {
-                // Request access to both camera and microphone
+
                 mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 video.srcObject = mediaStream;
 
-                // Start speech recognition
+
                 recognition.start();
 
-                // Update button states
+
                 startButton.disabled = true;
                 stopButton.disabled = false;
             } catch (error) {
@@ -120,20 +116,15 @@
             }
         }
 
-        // Stop camera and microphone
         function stopCameraAndMic() {
             if (mediaStream) {
-                // Stop all tracks in the media stream
                 const tracks = mediaStream.getTracks();
                 tracks.forEach(track => track.stop());
 
-                // Clear the video source
                 video.srcObject = null;
 
-                // Stop speech recognition
                 recognition.stop();
 
-                // Update button states
                 startButton.disabled = false;
                 stopButton.disabled = true;
 
@@ -142,36 +133,30 @@
             }
         }
 
-        // Handle speech recognition results
         recognition.onresult = async (event) => {
             let transcript = '';
             for (let i = event.resultIndex; i < event.results.length; i++) {
                 transcript += event.results[i][0].transcript;
             }
 
-            // Update captions
             captionsDiv.textContent = `Captions: ${transcript}`;
 
-            // Translate the transcript
-            const translatedText = await translateText(transcript, 'es'); // Translate to Spanish
+            const translatedText = await translateText(transcript, 'es');
             translatedDiv.textContent = `Translated: ${translatedText}`;
         };
 
-        // Handle errors
         recognition.onerror = (event) => {
             console.error('Speech recognition error:', event.error);
             captionsDiv.textContent = 'Error: Could not process audio.';
         };
-
-        // Handle when recognition ends
         recognition.onend = () => {
             captionsDiv.textContent = 'Stopped listening.';
         };
 
-        // Event listeners for buttons
         startButton.addEventListener('click', startCameraAndMic);
         stopButton.addEventListener('click', stopCameraAndMic);
     </script>
 
 </body>
+
 </html>
