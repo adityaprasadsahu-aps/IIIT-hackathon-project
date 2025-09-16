@@ -68,8 +68,6 @@
             document.querySelector('.toggle').addEventListener("click", toggleForm);
             document.getElementById('auth-form').addEventListener("submit", handleAuth);
         });
-
-        // Toggle between Login and Sign Up forms
         function toggleForm() {
             const title = document.getElementById('form-title');
             const button = document.querySelector('.btn');
@@ -86,7 +84,6 @@
             }
         }
 
-        // Handle authentication (login or signup)
         function handleAuth(event) {
             event.preventDefault();
 
@@ -95,25 +92,24 @@
             const formTitle = document.getElementById('form-title').innerText;
 
             if (formTitle === "Login") {
-                // Check if the user exists in local storage
                 const savedUser = JSON.parse(localStorage.getItem(username));
                 if (savedUser && savedUser.password === password) {
                     alert("Login successful!");
-                    window.location.href = "mainpage.html"; // Redirect to main page
+                    window.location.href = "mainpage.html";
                 } else {
                     alert("Invalid username or password.");
                 }
             } else {
-                // Save new user credentials during signup
                 if (localStorage.getItem(username)) {
                     alert("Username already exists. Please choose another one.");
                 } else {
                     localStorage.setItem(username, JSON.stringify({ username, password }));
                     alert("Account created successfully! You can now log in.");
-                    toggleForm(); // Switch back to login form
+                    toggleForm();
                 }
             }
         }
     </script>
 </body>
+
 </html>
